@@ -1,7 +1,3 @@
-const CELL = 12;
-const GAP = 2;
-const GRID_PADDING = 6;
-
 const DEFAULT_COLORS = ["#f3f5f8", "#dfeae4", "#bdd8cf", "#8ebfad", "#5f9f8a"];
 const TYPE_COLORS = {
   Run: ["#f3f5f8", "#dee8f6", "#bfcfe9", "#93aed7", "#5d82c1"],
@@ -18,6 +14,21 @@ const heatmaps = document.getElementById("heatmaps");
 const tooltip = document.getElementById("tooltip");
 const summary = document.getElementById("summary");
 const updated = document.getElementById("updated");
+
+function readCssVar(name, fallback) {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const parsed = parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function getLayout() {
+  return {
+    cell: readCssVar("--cell", 12),
+    gap: readCssVar("--gap", 2),
+    gridPadTop: readCssVar("--grid-pad-top", 6),
+    gridPadLeft: readCssVar("--grid-pad-left", 6),
+  };
+}
 
 function mondayOnOrBefore(d) {
   const day = d.getDay();
@@ -172,7 +183,7 @@ function buildSummary(payload, types, years, showTypeBreakdown, showActiveDays, 
   }
 }
 
-function buildHeatmapArea(aggregates, year, units, colors, type) {
+function buildHeatmapArea(aggregates, year, units, colors, type, layout) {
   const heatmapArea = document.createElement("div");
   heatmapArea.className = "heatmap-area";
 
@@ -183,19 +194,19 @@ function buildHeatmapArea(aggregates, year, units, colors, type) {
 
   const monthRow = document.createElement("div");
   monthRow.className = "month-row";
-  monthRow.style.paddingLeft = `${GRID_PADDING}px`;
+  monthRow.style.paddingLeft = `${layout.gridPadLeft}px`;
   heatmapArea.appendChild(monthRow);
 
   const dayCol = document.createElement("div");
   dayCol.className = "day-col";
-  dayCol.style.paddingTop = `${GRID_PADDING}px`;
-  dayCol.style.gap = `${GAP}px`;
+  dayCol.style.paddingTop = `${layout.gridPadTop}px`;
+  dayCol.style.gap = `${layout.gap}px`;
   DAYS.forEach((label) => {
     const dayLabel = document.createElement("div");
     dayLabel.className = "day-label";
     dayLabel.textContent = label;
-    dayLabel.style.height = `${CELL}px`;
-    dayLabel.style.lineHeight = `${CELL}px`;
+    dayLabel.style.height = `${layout.cell}px`;
+    dayLabel.style.lineHeight = `${layout.cell}px`;
     dayCol.appendChild(dayLabel);
   });
   heatmapArea.appendChild(dayCol);
@@ -211,7 +222,7 @@ function buildHeatmapArea(aggregates, year, units, colors, type) {
     const monthLabel = document.createElement("div");
     monthLabel.className = "month-label";
     monthLabel.textContent = MONTHS[month];
-    monthLabel.style.left = `${weekIndex * (CELL + GAP)}px`;
+    monthLabel.style.left = `${weekIndex * (layout.cell + layout.gap)}px`;
     monthRow.appendChild(monthLabel);
   }
 
@@ -295,7 +306,8 @@ function buildCard(type, year, aggregates, units) {
   card.appendChild(title);
 
   const colors = getColors(type);
-  const heatmapArea = buildHeatmapArea(aggregates, year, units, colors, type);
+  const layout = getLayout();
+  const heatmapArea = buildHeatmapArea(aggregates, year, units, colors, type, layout);
   card.appendChild(heatmapArea);
   return card;
 }
@@ -334,6 +346,8 @@ async function init() {
     opt.textContent = year;
     yearSelect.appendChild(opt);
   });
+
+  let resizeTimer = null;
 
   function update() {
     const selectedType = typeSelect.value;
@@ -374,6 +388,15 @@ async function init() {
   typeSelect.value = "all";
   yearSelect.value = "all";
   update();
+
+  window.addEventListener("resize", () => {
+    if (resizeTimer) {
+      window.clearTimeout(resizeTimer);
+    }
+    resizeTimer = window.setTimeout(() => {
+      update();
+    }, 150);
+  });
 }
 
 init().catch((error) => {
