@@ -369,9 +369,16 @@ async function init() {
       list.className = "type-list";
       years.forEach((year) => {
         const aggregates = payload.aggregates?.[String(year)]?.[type] || {};
+        const hasActivity = Object.values(aggregates).some((entry) => (entry?.count || 0) > 0);
+        if (selectedType === "all" && selectedYear === "all" && !hasActivity) {
+          return;
+        }
         const card = buildCard(type, year, aggregates, payload.units || { distance: "mi", elevation: "ft" });
         list.appendChild(card);
       });
+      if (!list.childElementCount) {
+        return;
+      }
       section.appendChild(list);
       heatmaps.appendChild(section);
     });
