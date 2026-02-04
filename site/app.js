@@ -9,8 +9,8 @@ const MULTI_TYPE_COLOR = "#b967ff";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const typeSelect = document.getElementById("typeSelect");
-const yearSelect = document.getElementById("yearSelect");
+const typeButtons = document.getElementById("typeButtons");
+const yearButtons = document.getElementById("yearButtons");
 const heatmaps = document.getElementById("heatmaps");
 const tooltip = document.getElementById("tooltip");
 const summary = document.getElementById("summary");
@@ -464,38 +464,47 @@ async function init() {
     }
   }
 
-  const allTypesOption = document.createElement("option");
-  allTypesOption.value = "all";
-  allTypesOption.textContent = "All types";
-  typeSelect.appendChild(allTypesOption);
+  const typeOptions = [
+    { value: "all", label: "All Workouts" },
+    ...payload.types.map((type) => ({ value: type, label: displayType(type) })),
+  ];
 
-  payload.types.forEach((type) => {
-    const opt = document.createElement("option");
-    opt.value = type;
-    opt.textContent = displayType(type);
-    typeSelect.appendChild(opt);
-  });
+  const yearOptions = [
+    { value: "all", label: "All Years" },
+    ...payload.years.slice().reverse().map((year) => ({ value: String(year), label: String(year) })),
+  ];
 
-  const allYearsOption = document.createElement("option");
-  allYearsOption.value = "all";
-  allYearsOption.textContent = "All years";
-  yearSelect.appendChild(allYearsOption);
-
-  payload.years.slice().reverse().forEach((year) => {
-    const opt = document.createElement("option");
-    opt.value = year;
-    opt.textContent = year;
-    yearSelect.appendChild(opt);
-  });
+  function renderButtons(container, options, onSelect) {
+    container.innerHTML = "";
+    options.forEach((option) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "filter-button";
+      button.dataset.value = option.value;
+      button.textContent = option.label;
+      button.addEventListener("click", () => onSelect(option.value));
+      container.appendChild(button);
+    });
+  }
 
   let resizeTimer = null;
 
+  let selectedType = "all";
+  let selectedYear = "all";
+
+  function updateButtonState(container, value) {
+    container.querySelectorAll(".filter-button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.value === value);
+    });
+  }
+
   function update() {
-    const selectedType = typeSelect.value;
-    const selectedYear = yearSelect.value;
     const types = selectedType === "all" ? payload.types : [selectedType];
     const years = selectedYear === "all" ? payload.years : [Number(selectedYear)];
     years.sort((a, b) => b - a);
+
+    updateButtonState(typeButtons, selectedType);
+    updateButtonState(yearButtons, selectedYear);
 
     heatmaps.innerHTML = "";
     if (selectedType === "all") {
@@ -561,11 +570,14 @@ async function init() {
     buildSummary(payload, types, years, showTypeBreakdown, showActiveDays, hideDistanceElevation);
   }
 
-  typeSelect.addEventListener("change", update);
-  yearSelect.addEventListener("change", update);
-
-  typeSelect.value = "all";
-  yearSelect.value = "all";
+  renderButtons(typeButtons, typeOptions, (value) => {
+    selectedType = value;
+    update();
+  });
+  renderButtons(yearButtons, yearOptions, (value) => {
+    selectedYear = value;
+    update();
+  });
   update();
 
   window.addEventListener("resize", () => {
