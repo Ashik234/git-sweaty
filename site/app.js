@@ -11,6 +11,8 @@ const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const typeButtons = document.getElementById("typeButtons");
 const yearButtons = document.getElementById("yearButtons");
+const typeSelect = document.getElementById("typeSelect");
+const yearSelect = document.getElementById("yearSelect");
 const heatmaps = document.getElementById("heatmaps");
 const tooltip = document.getElementById("tooltip");
 const summary = document.getElementById("summary");
@@ -487,6 +489,17 @@ async function init() {
     });
   }
 
+  function renderSelect(select, options) {
+    if (!select) return;
+    select.innerHTML = "";
+    options.forEach((option) => {
+      const opt = document.createElement("option");
+      opt.value = option.value;
+      opt.textContent = option.label;
+      select.appendChild(opt);
+    });
+  }
+
   let resizeTimer = null;
 
   let selectedType = "all";
@@ -505,6 +518,8 @@ async function init() {
 
     updateButtonState(typeButtons, selectedType);
     updateButtonState(yearButtons, selectedYear);
+    if (typeSelect) typeSelect.value = selectedType;
+    if (yearSelect) yearSelect.value = selectedYear;
 
     heatmaps.innerHTML = "";
     if (selectedType === "all") {
@@ -578,6 +593,21 @@ async function init() {
     selectedYear = value;
     update();
   });
+  renderSelect(typeSelect, typeOptions);
+  renderSelect(yearSelect, yearOptions);
+
+  if (typeSelect) {
+    typeSelect.addEventListener("change", () => {
+      selectedType = typeSelect.value;
+      update();
+    });
+  }
+  if (yearSelect) {
+    yearSelect.addEventListener("change", () => {
+      selectedYear = yearSelect.value;
+      update();
+    });
+  }
   update();
 
   window.addEventListener("resize", () => {
