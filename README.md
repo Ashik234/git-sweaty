@@ -5,6 +5,10 @@ Sync Strava activities, normalize and aggregate them, and generate GitHub-style 
 - Live site: [Interactive Heatmaps](https://aspain.github.io/git-sweaty/)
 - Note: The GitHub Pages site is optimized for responsive desktop/mobile viewing.
 
+<!-- HEATMAPS:START -->
+![Run 2025](heatmaps/Run/2025.svg)
+<!-- HEATMAPS:END -->
+
 ## Strava App Setup
 
 Create a Strava API application at [Strava API Settings](https://www.strava.com/settings/api). Use `localhost` for the **Authorization Callback Domain**.
@@ -88,13 +92,3 @@ Then enable the scheduled workflow in `.github/workflows/sync.yml`.
 - SVGs are deterministic and optimized for README rendering.
 - README updates automatically between the `HEATMAPS:START` and `HEATMAPS:END` markers.
 - The sync script rate-limits to free Strava API caps (200 overall / 15 min, 2,000 overall daily; 100 read / 15 min, 1,000 read daily). Initial backfill may take multiple days; the cursor is stored in `data/backfill_state.json` and resumes automatically. Once backfill is complete, only the recent sync runs.
-
-<!-- HEATMAPS:START -->
-## Heatmaps
-
-Heatmaps are published on the GitHub Pages site: [Interactive Heatmaps](https://aspain.github.io/git-sweaty/).
-
-Preview:
-
-![Run 2025](heatmaps/Run/2025.svg)
-<!-- HEATMAPS:END -->
