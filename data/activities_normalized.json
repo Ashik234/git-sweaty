@@ -12500,6 +12500,26 @@
     "year": 2026
   },
   {
+    "date": "2026-01-30",
+    "distance": 1879.1,
+    "elevation_gain": 7.2,
+    "id": 17223378509,
+    "moving_time": 699.0,
+    "start_date_local": "2026-01-30T07:37:29Z",
+    "type": "Run",
+    "year": 2026
+  },
+  {
+    "date": "2026-02-01",
+    "distance": 2108.6,
+    "elevation_gain": 15.2,
+    "id": 17244767713,
+    "moving_time": 842.0,
+    "start_date_local": "2026-02-01T07:48:04Z",
+    "type": "Run",
+    "year": 2026
+  },
+  {
     "date": "2026-02-01",
     "distance": 0.0,
     "elevation_gain": 0.0,
@@ -12507,6 +12527,16 @@
     "moving_time": 3419.0,
     "start_date_local": "2026-02-01T08:51:43Z",
     "type": "WeightTraining",
+    "year": 2026
+  },
+  {
+    "date": "2026-02-03",
+    "distance": 2751.2,
+    "elevation_gain": 14.8,
+    "id": 17267226333,
+    "moving_time": 978.0,
+    "start_date_local": "2026-02-03T07:26:08Z",
+    "type": "Run",
     "year": 2026
   },
   {
@@ -12527,6 +12557,16 @@
     "moving_time": 2651.0,
     "start_date_local": "2026-02-04T07:51:48Z",
     "type": "WeightTraining",
+    "year": 2026
+  },
+  {
+    "date": "2026-02-05",
+    "distance": 2138.1,
+    "elevation_gain": 11.1,
+    "id": 17291001013,
+    "moving_time": 736.0,
+    "start_date_local": "2026-02-05T07:43:11Z",
+    "type": "Run",
     "year": 2026
   }
 ]
