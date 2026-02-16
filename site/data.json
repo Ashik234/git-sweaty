@@ -11219,6 +11219,15 @@
           "distance": 1858.5,
           "elevation_gain": 5.6,
           "moving_time": 605.0
+        },
+        "2026-02-15": {
+          "activity_ids": [
+            17405979784
+          ],
+          "count": 1,
+          "distance": 2143.6,
+          "elevation_gain": 14.3,
+          "moving_time": 786.0
         }
       },
       "WeightTraining": {
@@ -11324,7 +11333,7 @@
       }
     }
   },
-  "generated_at": "2026-02-15T06:42:42.234171+00:00",
+  "generated_at": "2026-02-16T06:55:56.302679+00:00",
   "types": [
     "Run",
     "Ride",
